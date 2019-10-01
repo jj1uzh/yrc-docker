@@ -1,0 +1,16 @@
+FROM node:alpine
+
+ENV DB_PATH /var/db/messages.db
+
+RUN cd / &&\
+    apk update &&\
+    apk add git sqlite &&\
+    git clone https://github.com/miyarchf/yrc.git &&\
+    cd yrc/server/ &&\
+    npm install &&\
+    npm run build &&\
+    apk del git
+
+WORKDIR /yrc/server
+CMD ["npm", "run", "dist"]
+

@@ -1,0 +1,18 @@
+FROM nginx:alpine
+
+RUN cd / &&\
+    apk update &&\
+    apk add npm git &&\
+    git clone https://github.com/miyarchf/yrc.git &&\
+    cd yrc/client/ &&\
+    npm install &&\
+    npm run build &&\
+    mkdir -p /var/www/html/ &&\
+    cp -r dist/* /var/www/html/ &&\
+    chown -R nginx:nginx /var/www/html &&\
+    cd / &&\
+    rm -rf /yrc/ &&\
+    apk del npm git
+
+COPY ./default.conf /etc/nginx/conf.d
+
